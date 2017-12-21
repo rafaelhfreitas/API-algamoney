@@ -1,12 +1,12 @@
 package com.example.algamoneyapi.resource;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.algamoneyapi.event.RecursoCriadoEvent;
 import com.example.algamoneyapi.model.Pessoa;
 import com.example.algamoneyapi.repository.PessoaRepository;
+import com.example.algamoneyapi.repository.filter.PessoaFilter;
 import com.example.algamoneyapi.service.PessoaService;
 
 
@@ -41,11 +42,11 @@ public class PessoaResource {
 	@Autowired
 	private PessoaService pessoaService;
 	
-	
-	@GetMapping
-	public List<Pessoa> listar() {
-		return pessoaRepository.findAll();
-	}	
+	// Mapeamento antigo do metodo GET
+	//@GetMapping
+	//public List<Pessoa> listar() {
+	//	return pessoaRepository.findAll();
+	//}	
 	
 	
 	@PostMapping
@@ -58,6 +59,14 @@ public class PessoaResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body(pessoaSalva);		   				
 	}	
 	
+	
+	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
+	public Page<Pessoa> pesquisar(PessoaFilter pessoaFilter, Pageable pageable ) {
+		return pessoaRepository.filtrar(pessoaFilter, pageable);
+	}
+	
+
 	
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
