@@ -70,6 +70,7 @@ public class PessoaRepositoryImpl implements PessoaRepositoryQuery {
 		CriteriaQuery<Long> criteria = builder.createQuery(Long.class);
 		Root<Pessoa> root = criteria.from(Pessoa.class);
 		
+		
 		Predicate[] predicates = criarRestricoes(pessoaFilter, builder, root);
 		criteria.where(predicates);
 		
