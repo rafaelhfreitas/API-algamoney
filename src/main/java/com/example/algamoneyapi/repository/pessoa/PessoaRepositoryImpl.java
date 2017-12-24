@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
+import com.example.algamoneyapi.model.Endereco_;
 import com.example.algamoneyapi.model.Pessoa;
 import com.example.algamoneyapi.model.Pessoa_;
 import com.example.algamoneyapi.repository.filter.PessoaFilter;
@@ -51,6 +52,12 @@ public class PessoaRepositoryImpl implements PessoaRepositoryQuery {
         	predicates.add(builder.like(
         			builder.lower(root.get(Pessoa_.nome)), "%" + pessoaFilter.getNome().toLowerCase() + "%"));
         } 
+        
+        
+//        if(!StringUtils.isEmpty(pessoaFilter.getEstado())){
+//			predicates.add(builder.like(
+//					builder.lower(root.get(Endereco_.estado), pessoaFilter.getEstado())));
+//        }
         
         
         if(!StringUtils.isEmpty(pessoaFilter.isAtivo())){
