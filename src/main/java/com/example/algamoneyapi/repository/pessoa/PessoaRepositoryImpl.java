@@ -55,7 +55,7 @@ public class PessoaRepositoryImpl implements PessoaRepositoryQuery {
         
         if(!StringUtils.isEmpty(pessoaFilter.isAtivo())){
 			predicates.add(builder.isTrue(builder.equal(root.get(Pessoa_.ativo), pessoaFilter.isAtivo())));
-}
+        }
 
 		return predicates.toArray(new Predicate[predicates.size()]);
 	}

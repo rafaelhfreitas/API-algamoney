@@ -5,17 +5,17 @@ public class PessoaFilter {
 	
 	private String nome;
 		
-	private boolean ativo;
+	private Boolean ativo;
 
 	public String getNome() {
 		return nome;
 	}
 
-	public void setDescricao(String nome) {
+	public void setNome(String nome) {
 		this.nome = nome;
 	}
 
-	public boolean isAtivo() {
+	public Boolean isAtivo() {
 		return ativo;
 	}
 
