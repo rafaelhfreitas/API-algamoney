@@ -64,7 +64,17 @@ public class PessoaResource {
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
 	public Page<Pessoa> pesquisar(PessoaFilter pessoaFilter, Pageable pageable ) {
 		return pessoaRepository.filtrar(pessoaFilter, pageable);
+		//Solução usando o metodo default do JPA Repository
+		//return pessoaRepository.findByNomeContaining(nome, pageable)
 	}
+
+	
+//  Aqui é o mapeamento usando o JPA repositoy para fazer a pesquisa por nome e utilizando a tag @RequestParam para pegar o nome passado	
+//	@GetMapping
+//	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA')")
+//	public Page<Pessoa> pesquisar(@RequestParam(required = false, defaultValue = "%") String nome, Pageable pageable) {
+//		return pessoaRepository.findByNomeContaining(nome, pageable);
+//	}	
 	
 
 	

@@ -33,6 +33,7 @@ import com.example.algamoneyapi.repository.LancamentoRepository;
 import com.example.algamoneyapi.repository.filter.LancamentoFilter;
 import com.example.algamoneyapi.repository.projection.ResumoLancamento;
 import com.example.algamoneyapi.service.LancamentoService;
+import com.example.algamoneyapi.service.exception.CategoriaInexistenteException;
 import com.example.algamoneyapi.service.exception.PessoaInexistenteOuInativaException;
 
 @RestController
@@ -53,6 +54,7 @@ public class LancamentoResource {
 	@Autowired
 	private MessageSource messageSource;
 	
+
 	
 	@PostMapping
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
@@ -86,9 +88,16 @@ public class LancamentoResource {
 	@PutMapping("/{codigo}")
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
     public ResponseEntity<Lancamento> atualizar(@PathVariable Long codigo, @Valid @RequestBody Lancamento lancamento){
-		Lancamento lancamentoSalvo = lancamentoService.atualizar(codigo, lancamento);
-		return ResponseEntity.ok(lancamentoSalvo);
+		
+		try {
+			Lancamento lancamentoSalvo = lancamentoService.atualizar(codigo, lancamento);		
+			return ResponseEntity.ok(lancamentoSalvo);			
+		} catch (IllegalArgumentException ex) {
+			return ResponseEntity.notFound().build();
+			
+		}
 	}	
+	
 	
 	@DeleteMapping("/{codigo}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
@@ -102,6 +111,16 @@ public class LancamentoResource {
 	@ExceptionHandler({ PessoaInexistenteOuInativaException.class})
 	public ResponseEntity<Object> handlePessoaInexistenteOuInativa(PessoaInexistenteOuInativaException ex){
 	    String mensagemUsuario = messageSource.getMessage("pessoa.inexistente-ou-inativa", null,LocaleContextHolder.getLocale());
+	    String mensagemDesenvolvedor = ex.toString();     
+	    List<Erro>  erros = Arrays.asList(new Erro(mensagemUsuario,mensagemDesenvolvedor));	    
+	    return ResponseEntity.badRequest().body(erros);
+		
+	}
+	
+	
+	@ExceptionHandler({ CategoriaInexistenteException.class})
+	public ResponseEntity<Object> handleCategoriaInexistente(CategoriaInexistenteException ex){
+	    String mensagemUsuario = messageSource.getMessage("categoria.inexistente-ou-inativa", null,LocaleContextHolder.getLocale());
 	    String mensagemDesenvolvedor = ex.toString();     
 	    List<Erro>  erros = Arrays.asList(new Erro(mensagemUsuario,mensagemDesenvolvedor));	    
 	    return ResponseEntity.badRequest().body(erros);
