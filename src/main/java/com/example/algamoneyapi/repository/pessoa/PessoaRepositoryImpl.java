@@ -54,10 +54,16 @@ public class PessoaRepositoryImpl implements PessoaRepositoryQuery {
         } 
         
         
-//        if(!StringUtils.isEmpty(pessoaFilter.getEstado())){
-//			predicates.add(builder.like(
-//					builder.lower(root.get(Endereco_.estado), pessoaFilter.getEstado())));
-//        }
+        if(!StringUtils.isEmpty(pessoaFilter.getCidade())){
+			predicates.add(builder.like(
+					builder.lower(root.get(Pessoa_.endereco).get(Endereco_.cidade)), "%" +pessoaFilter.getCidade().toLowerCase() + "%"));
+        }        
+        
+        
+        if(!StringUtils.isEmpty(pessoaFilter.getEstado())){
+			predicates.add(builder.like(
+					builder.lower(root.get(Pessoa_.endereco).get(Endereco_.estado)), "%" +pessoaFilter.getEstado().toLowerCase() + "%"));
+        }
         
         
         if(!StringUtils.isEmpty(pessoaFilter.isAtivo())){
